@@ -1,6 +1,6 @@
 const mActor        = require('../models/actors.model')
-const { db } = require('../models/actor_details.model')
 const mActorDetails = require('../models/actor_details.model')
+const mMovies = require('../models/movie_detail.model')
 
 
 exports.getList = async (req, res) => {
@@ -20,7 +20,7 @@ exports.getActorNamedBen = async (req, res) => {
         const obj = { message: 'No existe el actor' }
         return res.send(obj)
     }
-    const actorDetails = {} // TODO: recoger los detalles del actor
+    const actorDetails = await mActorDetails.findOne(dbQuery) // TODO: recoger los detalles del actor
 
     const data = { actor, actorDetails }
 
@@ -38,7 +38,7 @@ exports.getActor = async (req, res) => {
         const obj = { message: 'No existe el actor' }
         return res.send(obj)
     }
-    const actorDetails = {} // TODO: recoger los detalles del actor
+    const actorDetails = await mActorDetails.findById(id) // TODO: recoger los detalles del actor
 
     const data = { actor, actorDetails }
 
@@ -51,14 +51,16 @@ exports.getActorsVideos = async (req, res) => {
     const {body, params, query} = req
     const id = params.id || query.id || body.id
 
-    const actor = {} //TODO: Recoger los datos del actor
+    const actor = await mActor.findById(id) //TODO: Recoger los datos del actor
     if (!actor) {
         const obj = { message: 'No existe el actor' }
         return res.send(obj)
     }
-    const movies = [] // TODO: recoger los detalles de las peliculas del actor
+    const movies = await mMovies.find({
+        id: { $in:idsMovies }
+    }) // TODO: recoger los detalles de las peliculas del actor
 
-    const data = { actor, movies }
+     const data = { actor, movies }
 
     // Los datos del Actor y sus detalles
     res.send({data})
