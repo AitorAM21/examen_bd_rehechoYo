@@ -1,4 +1,5 @@
 const mActor        = require('../models/actors.model')
+const { db } = require('../models/actor_details.model')
 const mActorDetails = require('../models/actor_details.model')
 
 
@@ -11,8 +12,10 @@ exports.getList = async (req, res) => {
 }
 
 exports.getActorNamedBen = async (req, res) => {
-
-    const actor = {}// TODO: Recoger los datos del primer actor que se llame 'Ben'
+    const dbQuery={
+        name:{$regex:Adelfa,$options:i}
+    }
+    const actor = await mActor.findOne(dbQuery)// TODO: Recoger los datos del primer actor que se llame 'Ben'
     if (!actor) {
         const obj = { message: 'No existe el actor' }
         return res.send(obj)
